@@ -1,0 +1,171 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:composition template="/template/sablon.xhtml">
+        <ui:define name="header">
+            <h1>Izveštaj o broju doručaka</h1>
+        </ui:define>
+
+        <ui:define name="sadrzaj">
+
+            <div id="form_div">
+
+                <p:outputLabel>Status:</p:outputLabel>
+                <p:inputText id="status_i" 
+                             value="#{unosIzvestajaMB.status}" 
+                             disabled="#{!state.checkStatus}" 
+                             style="width: 150px"></p:inputText>
+
+                <p:commandButton widgetVar="postavi_status" 
+                                 value="Postavi status" 
+                                 action="#{unosIzvestajaMB.postaviStatus()}" 
+                                 update="status_i" 
+                                 style="width: 200px"
+                                 onclick="PF('testPanel').show(), PF('postavi_status').disable()"
+                                 rendered="#{true}"
+                                 >
+
+                </p:commandButton>
+
+
+                <p:panel id="button_panel" 
+                         widgetVar="testPanel" 
+                         closable="true" 
+                         toggleable="true" 
+                         visible="false"
+                         >
+
+                    <h:form id="unos_izvestaja_form">
+
+                        <p:panelGrid columns="10" layout="grid"> 
+                            <f:facet name="header">
+                                <h3>Unos izveštaja o broju doručaka</h3>
+                            </f:facet>
+                            <p:panelGrid columns = "20" style="text-align: center" >
+                                <p:outputLabel>#</p:outputLabel>
+                                <p:inputText id="ID" 
+                                             value="#{unosIzvestajaMB.rbrIzvestaja}"
+                                             disabled="true"
+                                             style="width:50px">
+                                </p:inputText>
+
+                                <p:outputLabel>Restoran:</p:outputLabel>
+                                <p:selectOneMenu id="restoran" 
+                                                 value="#{unosIzvestajaMB.restoranID}" 
+                                                 style="width: 150px">
+                                    <f:selectItem itemLabel="---" 
+                                                  itemValue="0">
+
+                                    </f:selectItem>
+                                    <f:selectItems value="#{unosIzvestajaMB.rsRestorani}"></f:selectItems>
+                                </p:selectOneMenu>
+                            </p:panelGrid>
+                            <p:panelGrid columns = "10" style="text-align: center">
+
+                                <p:outputLabel for="datumOd">Datum od:</p:outputLabel>
+                                <p:calendar id="datumOd" 
+                                            value="#{unosIzvestajaMB.datumOd}" 
+                                            pattern="dd.MM.yyyy"
+                                            size="10"
+                                            >
+                                </p:calendar>
+
+                                <p:outputLabel for="datumDo">Datum do:</p:outputLabel>
+
+                                <p:calendar id="datumDo" 
+                                            value="#{unosIzvestajaMB.datumDo}" 
+                                            pattern="dd.MM.yyyy"
+                                            size="10">
+                                </p:calendar>
+                            </p:panelGrid>
+                            <br></br>
+                            <br></br>
+                            <h:form style="text-align: center"> 
+                                <br></br>
+                                <h:head><b>Rad sa stavkama</b></h:head>
+                                <br></br>
+                                <p:messages id="poruka" showDetail="true" closable="true">
+                                    <p:autoUpdate />
+                                </p:messages>
+                                <p:panelGrid columns = "20">
+                                    <h:outputText value="Datum:"/> 
+                                    <p:calendar id="datum" 
+                                                value="#{unosIzvestajaMB.datum}" 
+                                                pattern="dd.MM.yyyy"
+                                                size="10">
+                                    </p:calendar>
+                                    <br></br>
+                                    <h:outputText value="Dan:"/> 
+                                    <br></br>
+                                    <p:inputText id="dan" 
+                                                 value="#{unosIzvestajaMB.dan}" 
+                                                 style="width: 150px"/>
+                                    <br></br>
+                                    <h:outputText value="Broj doručaka:"/> 
+                                    <br></br>
+                                    <p:inputText id="brojDorucaka" 
+                                                 value="#{unosIzvestajaMB.brojDorucaka}" 
+                                                 style="width: 150px"/>
+                                    <br></br>
+                                    <p:commandButton value="Dodaj stavku" 
+                                                     action="#{unosIzvestajaMB.dodajNovuStavkuIzvestaja()}"
+                                                     update="unos_izvestaja_form"/>
+                                </p:panelGrid>
+                                <br></br>
+                                <p:panelGrid columns="1" layout="grid" style="width: 1120px">
+                                    <p:dataTable id="tabela_stavki" rows="0" value="#{unosIzvestajaMB.stavkeIzvestaja}" var="si">
+                                        <p:column headerText="#" width="50">
+                                            <h:outputText id="rbrStavke" value="#{si.rbrStavke}" /> 
+                                        </p:column>
+                                        <p:column headerText="datum">
+                                            <h:inputText value="#{si.datum}" 
+                                                         disabled="true" 
+                                                         style="text-align:center">  
+                                                <f:convertDateTime pattern="dd.MM.yyyy"/> 
+                                            </h:inputText>
+                                        </p:column>
+                                        <p:column headerText="Dan">
+                                            <h:outputText id="dan"
+                                                          value="#{si.dan}" /> 
+                                        </p:column>
+                                        <p:column headerText="Broj doručaka">
+                                            <h:outputText id="brojDorucaka"
+                                                          value="#{si.brojDorucaka}" /> 
+                                        </p:column>
+                                        <p:column headerText="Brisanje">
+                                            <p:commandButton value="Obriši" action="#{unosIzvestajaMB.obrisi(si)}" update="unos_izvestaja_form"></p:commandButton>
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:panelGrid>
+                            </h:form>
+
+                            <f:facet name="footer">
+
+                                <div align="right">
+                                    <p:outputLabel> Zaposleni: </p:outputLabel>
+                                    <p:selectOneMenu id="zaposleni" 
+                                                     value="#{unosIzvestajaMB.zaposleniID}"
+                                                     style="width: 150px">
+                                        <f:selectItem itemLabel="---" itemValue="0">
+                                        </f:selectItem>
+                                        <f:selectItems value="#{unosIzvestajaMB.rsZaposleni}">
+                                        </f:selectItems>
+                                    </p:selectOneMenu>
+                                    <p:commandButton id="kreiraj_izvestaj" value="Kreiraj" 
+                                                     action="#{unosIzvestajaMB.sacuvajIzvestaj()}" update="unos_izvestaja_form"></p:commandButton>
+                                </div>
+                            </f:facet>
+
+                        </p:panelGrid>
+
+                    </h:form>
+                </p:panel>
+            </div>
+        </ui:define>
+
+    </ui:composition>
+</html>

@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:composition template="/template/sablon.xhtml">
+        <ui:define name="header">
+            <h1>Izveštaj o broju doručaka</h1>
+        </ui:define>
+        <ui:define name="sadrzaj">
+            <div id="form_div">
+                <h:form id="prikaz_izvestaja_form">
+                    <p:growl id="poruka" sticky="true"></p:growl>
+                    <p:panelGrid columns="4" layout="grid">
+
+                        <f:facet name="header">
+                            <h3>Prikazivanje izveštaja o broju doručaka</h3>
+                        </f:facet>
+
+                        <p:outputLabel>Status:</p:outputLabel>
+                        <p:inputText id="status_i" value="Kreiran" disabled="#{!state.checkStatus}"></p:inputText>
+
+                        <p:outputLabel>Restoran:</p:outputLabel>
+                        <p:inputText id="nazivRestorana" 
+                                     value="#{prikazIzvestajaMB.rsIzvestaj.nazivRestorana}"
+                                     disabled="#{!state.checkStatus}">
+                        </p:inputText>
+
+                        <p:outputLabel for="datumOd">Datum od:</p:outputLabel>
+                        <p:calendar id="datumOd" value="#{prikazIzvestajaMB.rsIzvestaj.datumOd}" disabled="true" pattern="dd.MM.yyyy"></p:calendar>
+
+                        <p:outputLabel for="datumDo">Datum do:</p:outputLabel>
+                        <p:calendar id="datumDo" value="#{prikazIzvestajaMB.rsIzvestaj.datumDo}" disabled="true" pattern="dd.MM.yyyy"></p:calendar>
+                        <p:panelGrid columns="1" layout="grid" style="width: 1180px">
+                            <p:dataTable id="tabela_stavki_izvestaja_prikaz" value="#{prikazIzvestajaMB.rsIzvestaj.stavkeIzvestaja}"                             
+                                         var="si">
+
+                                <p:column headerText="#">
+                                    <h:outputText value="#{si.rbrStavke}"></h:outputText>
+                                </p:column>
+
+                                <p:column headerText="datum">
+                                    <h:inputText value="#{si.datum}" disabled="true" style="text-align:center">  
+                                        <f:convertDateTime pattern="dd.MM.yyyy"/> 
+                                    </h:inputText>
+                                </p:column>
+
+                                <p:column headerText="Dan">
+                                    <h:outputText value="#{si.dan}"></h:outputText>
+                                </p:column>
+
+                                <p:column headerText="Broj doručaka">
+                                    <h:outputText value="#{si.brojDorucaka}"></h:outputText>
+                                </p:column>
+                               
+                            </p:dataTable>
+                        </p:panelGrid>
+
+                        <f:facet name="footer">
+
+                            <div align="right">
+                                <p:outputLabel>Ukupan broj doručaka:</p:outputLabel>
+                                <p:inputText id="ukupanBrojDoruacaka" 
+                                             value="#{prikazIzvestajaMB.rsIzvestaj.ukupanBrojDorucaka}"
+                                             disabled="#{!state.checkStatus}">
+                                </p:inputText>
+
+                                <p:outputLabel>Zaposleni:</p:outputLabel>
+                                <p:inputText id="zaposleni" 
+                                             value="#{prikazIzvestajaMB.rsIzvestaj.prezimeZaposlenog}"
+                                             disabled="#{!state.checkStatus}">
+                                </p:inputText>
+
+                            </div>
+                        </f:facet>
+
+                    </p:panelGrid>
+                </h:form>
+            </div>
+        </ui:define>
+
+    </ui:composition>
+</html>

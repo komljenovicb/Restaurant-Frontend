@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template/sablon.xhtml">
+
+        <ui:define name="header">
+            <h1>Pretraga izveštaja</h1>
+        </ui:define>
+        <br></br>
+        <br></br>
+        <br></br>
+        <ui:define name="sadrzaj">
+            <h:form id="pretraga_izvestaja_form" style="width:780px">
+
+                <p:panelGrid columns="5" layout="grid">
+                    <f:facet name="header">
+                        <h:outputText value="Podaci o izveštaju"></h:outputText>
+                    </f:facet>
+
+                    <p:panelGrid columns="5" layout="grid">            
+                        <p:outputLabel for="datumOd">Datum od:</p:outputLabel>
+                        <p:calendar id="datumOd"
+                                    value="#{vratiIzvestajeMB.izvestajZaPretragu.datumOd}"
+                                    pattern="dd.MM.yyyy"
+                                    size="9"></p:calendar>
+
+                        <p:outputLabel for="datumDo">Datum do:</p:outputLabel>
+                        <p:calendar id="datumDo"
+                                    value="#{vratiIzvestajeMB.izvestajZaPretragu.datumDo}"
+                                    pattern="dd.MM.yyyy"
+                                    size="9"></p:calendar>
+                    </p:panelGrid>
+                    <p:commandButton value="Pretraga" ajax="false" 
+                                     action="#{vratiIzvestajeMB.pretrazi()}"
+                                     update="frmPretragaIzvestaja" 
+                                     style="float: right">
+
+                    </p:commandButton>
+                </p:panelGrid>
+            </h:form>
+            <h:form id="frmPretragaIzvestaja" style="width:780px">
+                <p:growl id="poruka" sticky="true"></p:growl>
+                <f:event type="preRenderView" listener="#{vratiIzvestajeMB.azurirajPrikaz}"></f:event>
+                <p:dataTable value="#{vratiIzvestajeMB.lista}" var="i" 
+                             selection="#{vratiIzvestajeMB.izvestajZaizmenu}" 
+                             rowKey="#{i.rbrIzvestaja}" selectionMode="single" 
+                             emptyMessage="Nema unetih izveštaja u zadatom periodu."     
+                             >   
+                    <f:facet name="header">
+                        Izveštaji
+                    </f:facet>
+
+                    <p:column headerText="#" style="width:50px">
+                        #{i.rbrIzvestaja}
+                    </p:column>
+                    <p:column headerText="Datum od">
+                        <h:outputText value="#{i.datumOd}">
+                            <f:convertDateTime pattern="dd.MM.yyyy" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Datum do">
+                        <h:outputText value="#{i.datumDo}">
+                            <f:convertDateTime pattern="dd.MM.yyyy" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Restoran">
+                        #{i.nazivRestorana}
+                    </p:column>
+
+                    <p:column headerText="Izmena">
+                        <p:commandButton value="Izmeni" ajax="false"
+                                         action="#{vratiIzvestajeMB.izmeni(i)}">
+                        </p:commandButton>
+                    </p:column>
+                    <p:column headerText="Prikaz">
+                        <p:commandButton value="Prikaži" ajax="false"
+                                         action="#{vratiIzvestajeMB.prikazi(i)}" >
+                        </p:commandButton>
+                    </p:column>
+                    <p:column headerText="Brisanje">
+                        <p:commandButton value="Obrisi" ajax="false"
+                                         action="#{vratiIzvestajeMB.obrisiIzvestaj()}">
+                        </p:commandButton>                      
+                    </p:column>
+
+                    <f:facet name= "footer">
+                        <p:commandButton value="Kreiraj novi izveštaj" ajax="false" 
+                                         action="#{vratiIzvestajeMB.kreiraj()}">
+                        </p:commandButton>
+                    </f:facet>
+
+
+                </p:dataTable>
+            </h:form>
+            <f:facet name="footer">
+
+            </f:facet>
+        </ui:define>
+    </ui:composition>
+</html>
+
+

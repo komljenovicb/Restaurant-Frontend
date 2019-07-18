@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template/sablon.xhtml">
+        <ui:define name="header">
+            <h1>Izveštaj o broju doručaka</h1>
+        </ui:define>
+
+        <ui:define name="sadrzaj">
+
+            <div id="form_div"> 
+
+                <p:outputLabel>Status:</p:outputLabel>
+                <p:inputText id="status_i" 
+                             value="#{unosIzvestajaMB.status}" 
+                             disabled="#{!state.checkStatus}" 
+                             style="width: 150px"></p:inputText>
+
+                <p:commandButton widgetVar="postavi_status" 
+                                 value="Postavi status" 
+                                 action="#{unosIzvestajaMB.postaviStatus()}" 
+                                 update="status_i" 
+                                 style="width: 200px"
+                                 onclick="PF('testPanel').show(), PF('postavi_status').disable()"
+                                 rendered="#{true}"
+                                 >
+
+                </p:commandButton>
+
+                <p:panel id="button_panel" 
+                         widgetVar="testPanel" 
+                         closable="true" 
+                         toggleable="true" 
+                         visible="false"
+                         >
+
+                    <h:form id="izmena_izvestaja_form">      
+
+                        <p:panelGrid columns="10" layout="grid">
+                            <f:facet name="header">
+                                <h3>Izmena izveštaja o broju doručaka</h3>
+                            </f:facet>
+
+                            <p:panelGrid columns = "10" style="text-align: center">
+                                <p:outputLabel>#</p:outputLabel>
+                                <p:inputText id="ID" 
+                                             value="#{izmenaIzvestajaMB.rsIzvestaj.rbrIzvestaja}"
+                                             disabled="true"
+                                             style="width:50px">
+                                </p:inputText>
+
+                                <p:outputLabel>Restoran:</p:outputLabel>
+
+                                <p:selectOneMenu id="restoran" 
+                                                 value="#{izmenaIzvestajaMB.rsIzvestaj.idRestorana}" 
+                                                 style="width: 150px">
+                                    <f:selectItem itemLabel="---" itemValue="0"></f:selectItem>
+                                    <f:selectItems value="#{izmenaIzvestajaMB.rsRestorani}"></f:selectItems>
+                                </p:selectOneMenu>
+                            </p:panelGrid>
+                            <p:panelGrid columns = "10" style="text-align: center">
+                                <p:outputLabel for="datumOd">Datum od:</p:outputLabel>
+                                <p:calendar id="datumOd" 
+                                            value="#{izmenaIzvestajaMB.rsIzvestaj.datumOd}" 
+                                            pattern="dd.MM.yyyy"
+                                            size="10"
+                                            >
+                                </p:calendar>
+
+                                <p:outputLabel for="datumDo">Datum do:</p:outputLabel>
+
+                                <p:calendar id="datumDo" 
+                                            value="#{izmenaIzvestajaMB.rsIzvestaj.datumDo}" 
+                                            pattern="dd.MM.yyyy"
+                                            size="10"
+                                            >
+                                </p:calendar>
+                            </p:panelGrid>
+                            <br></br>
+                            <br></br>    
+
+                            <p:panelGrid columns = "20">   
+                                <h:outputText value="Datum:">
+                                </h:outputText>
+                                <p:calendar id="datum" 
+                                            value="#{izmenaIzvestajaMB.datum}" 
+                                            pattern="dd.MM.yyyy"
+                                            size="10"
+                                            >
+                                </p:calendar>
+                                <br></br>
+                                <h:outputText value="Dan:"> 
+                                </h:outputText>
+                                <br></br>
+                                <p:inputText id="dan"
+                                             value="#{izmenaIzvestajaMB.dan}" 
+                                             style="width: 150px"
+                                             >                              
+                                </p:inputText>
+                                <br></br>
+                                <h:outputText value="Broj doručaka:">
+                                </h:outputText>
+                                <br></br>
+                                <p:inputText id="brojDorucaka" 
+                                             value="#{izmenaIzvestajaMB.brojDorucaka}" 
+                                             style="width: 150px"                                         
+                                             >
+                                </p:inputText> 
+                                <br></br>
+                                <p:commandButton value="Dodaj stavku" 
+                                                 action="#{izmenaIzvestajaMB.sacuvajStavkuIzvestaja()}" 
+                                                 update="tabela_stavki"
+                                                 >
+                                </p:commandButton>
+                            </p:panelGrid>
+                            <br></br>
+                   
+                            <p:panelGrid columns="1" layout="grid" style="width: 1120px">
+
+                                <p:messages id="poruka" showDetail="true" closable="true">
+                                    <p:autoUpdate />
+                                </p:messages> 
+                                <p:dataTable id="tabela_stavki" 
+                                             value="#{izmenaIzvestajaMB.rsIzvestaj.stavkeIzvestaja}"                             
+                                             var="si" 
+                                             editable="true"
+                                             >
+                                    <f:facet name="header">
+                                        <h:outputText value="Stavke izveštaja"></h:outputText>
+                                    </f:facet>
+                                    <p:ajax event="rowEdit" listener="#{izmenaIzvestajaMB.izmeniStavkuIzvestaja}" update=":izmena_izvestaja_form:poruka"></p:ajax>
+                                    <p:ajax event="rowEditCancel" listener="#{izmenaIzvestajaMB.ponistiIzmenu()}" update=":izmena_izvestaja_form:poruka"></p:ajax>
+
+                                    <p:column headerText="#" width="50">
+                                        <h:outputText id="rbrStavke" value="#{si.rbrStavke}"> 
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column>
+                                        <p:cellEditor>
+                                            <f:facet name="output">
+                                                <h:outputText value="#{si.datum}">
+                                                    <f:convertDateTime pattern="dd.MM.yyyy">
+                                                    </f:convertDateTime>
+                                                </h:outputText>
+                                            </f:facet>
+                                            <f:facet name="input"><p:calendar value="#{si.datum}"
+                                                                              size="9" pattern="dd.MM.yyyy"></p:calendar></f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+
+                                    <p:column headerText="Dan">
+                                        <p:cellEditor>
+                                            <f:facet name="output"><h:outputText value="#{si.dan}"></h:outputText></f:facet>
+                                            <f:facet name="input">
+                                                <p:inputText 
+                                                    value="#{si.dan}"
+                                                    style="text-align: center; width:150px">
+                                                </p:inputText>   
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+
+                                    <p:column headerText="Broj doručaka">
+                                        <p:cellEditor>
+                                            <f:facet name="output"><h:outputText value="#{si.brojDorucaka}"></h:outputText></f:facet>
+                                            <f:facet name="input">
+                                                <p:inputText value="#{si.brojDorucaka}" 
+                                                             style="text-align: center; width:150px">
+                                                </p:inputText>
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+
+                                    <p:column headerText="Izmena" style="text-align: center">
+                                        <p:rowEditor>
+                                        </p:rowEditor>
+                                    </p:column>
+
+                                    <p:column>
+                                        <p:commandButton id="obrisi_stavku" 
+                                                         value="Obriši" 
+                                                         action="#{izmenaIzvestajaMB.obrisiStavku(si)}" 
+                                                         update="izmena_izvestaja_form">
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:panelGrid>
+
+
+                            <f:facet name="footer">
+                                <div align="right">
+      
+                                    <p:outputLabel> Zaposleni: </p:outputLabel>
+                                    <p:selectOneMenu id="zaposleni" 
+                                                     value="#{izmenaIzvestajaMB.rsIzvestaj.zaposleniID}"
+                                                     style="width: 150px">
+                                        <f:selectItem itemLabel="---" itemValue="0">
+                                        </f:selectItem>
+                                        <f:selectItems value="#{izmenaIzvestajaMB.rsZaposleni}">
+                                        </f:selectItems>
+                                    </p:selectOneMenu>
+                                    <p:commandButton id="kreiraj_izvestaj" value="Sačuvaj izveštaj" 
+                                                     action="#{izmenaIzvestajaMB.izmeniIzvestaj()}" 
+                                                     update="izmena_izvestaja_form">
+                                    </p:commandButton>
+                                </div>
+                            </f:facet>
+                        </p:panelGrid>
+                    </h:form>
+                </p:panel>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

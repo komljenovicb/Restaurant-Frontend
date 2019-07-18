@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://localhost:8080/FpisWS/izvestaj?wsdl" uri="http://localhost:8080/FpisWS/izvestaj?wsdl"/>   
+    <system systemId="http://localhost:8080/FpisWS/usluga?wsdl" uri="http://localhost:8080/FpisWS/usluga?wsdl"/>
+</catalog>

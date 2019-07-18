@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>FPIS aplikacija</title>
+        <h:outputStylesheet library="css" name="styles.css"></h:outputStylesheet>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"></link>
+    </h:head>
+    <h:body>
+        <div class="header">
+            <ui:insert name="header">
+                <h1>Default header</h1>
+            </ui:insert>
+
+            <h:form>
+                <p:menubar>
+                    <p:menuitem value="Početna" url="/" icon="fa fa-home" ></p:menuitem>
+                    <p:submenu label="Izveštaj o broju doručaka">
+                        <p:menuitem value="Pretraživanje izveštaja o broju doručaka" url="/faces/izvestaj_o_broju_dorucaka/pretrazivanje_izvestaja.xhtml" icon="fa fa-plus"></p:menuitem>      
+                    </p:submenu>
+                    <p:submenu label="Usluga">
+                        <p:menuitem value="Unos usluge" url="/faces/usluga/unos_usluge.xhtml" icon="fa fa-plus"></p:menuitem>      
+                        <p:menuitem value="Izmena usluge" url="/faces/usluga/izmena_usl.xhtml" icon="fa fa-plus"></p:menuitem>
+                    </p:submenu>
+                </p:menubar>
+            </h:form>
+        </div>
+
+        <div class="sadrzaj">
+            <ui:insert name="sadrzaj"></ui:insert>
+        </div>
+
+        <div class="footer">
+            <ui:insert name="footer">
+                <p><i>@Copyrighting <b>FON</b> 2019</i></p>
+            </ui:insert>
+        </div>
+    </h:body>
+</html>
+
